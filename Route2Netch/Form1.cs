@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.IO;
+using System.Net;
 
 namespace Route2Netch
 {
@@ -130,6 +131,7 @@ namespace Route2Netch
             var routeLines = File.ReadAllLines(routePath);
             int partFlag = 0;
             bool startFlag = false;
+            string metric = string.Empty;
             var sb = new StringBuilder();
             for(int i=0; i < routeLines.Length; i++)
             {
@@ -155,7 +157,15 @@ namespace Route2Netch
                             avaArr.Add(str);
                         }
                     }
-                    if (avaArr[4] != "1") continue;
+                    if (avaArr[0].Split('.')[0] == "10") continue;
+                    if (avaArr[0].Split('.')[0] == "172" &&
+                        (int.Parse(avaArr[0].Split('.')[1]) >= 16 && int.Parse(avaArr[0].Split('.')[1]) < 32))
+                        continue;
+                    if (avaArr[0].Split('.')[0] == "192"&& avaArr[0].Split('.')[1] == "168") continue;
+                    if (avaArr[0] == "0.0.0.0") continue;
+                    if (avaArr[0].StartsWith("127.0.0.")) continue;
+                    if (avaArr[0].StartsWith("224.0.0.")) continue;
+                    if (avaArr[0]=="255.255.255.255") continue;
                     sb.Append(avaArr[0]);
                     int netmask = 0;
                     var nm = avaArr[1].Split('.');
